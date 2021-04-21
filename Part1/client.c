@@ -1,4 +1,5 @@
 #include "unp.h"
+#include "util.h"
 int main(int argc,char **argv){
     int sockfd;//socket descriptor
     struct sockaddr_in servaddr;
@@ -35,23 +36,16 @@ void str_cli(FILE* fp,int sockfd){
     while (fgets(sendline,MAXLINE,fp)!=NULL)
     {
         char recvline[MAXLINE];
-        printf("Get string from client stdin,%s,length is %d ",sendline,strlen(sendline));
         //写入socket中去，传送到服务端
-        write(sockfd,sendline,strlen(sendline));
-        ssize_t n;
-        int len = 0;
-        
-        ioctl(sockfd, FIONREAD, &len);
-        if (len > 0) {
-            len = read(sockfd, recvline, len);
-            printf("%d",len);
-        }
+        writen(sockfd,sendline,strlen(sendline));
+        //从服务端获取
+        readline(sockfd, recvline,MAXLINE);
         fputs(recvline,stdout);
-        // while((read(sockfd,recvline,10)!=0)){
+        // while((readline(sockfd,recvline,10)!=0)){
         //     fputs(recvline,stdout);
         // }
-        // if(read(sockfd,recvline,MAXLINE)==0){
-        //     printf("Failed to read from server side\n");
+        // if(readline(sockfd,recvline,MAXLINE)==0){
+        //     printf("Failed to readline from server side\n");
         //     exit(0);
         // }
     }

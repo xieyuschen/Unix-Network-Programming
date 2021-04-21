@@ -1,3 +1,3 @@
 sudo rm client server
-gcc -I../../unpv13e/lib client.c -o client
-gcc -I../../unpv13e/lib server.c -o server
+gcc -I../../unpv13e/lib -I../Part1 client.c -w -o  client
+gcc -I../../unpv13e/lib -I../Part1 server.c -w -o  server
