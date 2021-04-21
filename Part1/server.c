@@ -8,28 +8,49 @@ int main(int argc,char** argv){
     //暂时不知道干啥的
     socklen_t clilen; 
     struct sockaddr_in cliaddr,servaddr;
-    listenfd=Socket(AF_INET,SOCK_STREAM,0);
-
-    bzero(&sockaddr,sizeof(sockaddr));
+    listenfd=socket(AF_INET,SOCK_STREAM,0);
+    bzero(&servaddr,sizeof(servaddr));
     servaddr.sin_family=AF_INET;
     servaddr.sin_port=htons(SERV_PORT);
     //地址被指定为INADDR_ANY，具体做什么的
     servaddr.sin_addr.s_addr=htonl(INADDR_ANY);
-
+    printf("bind successfully\n");
     //把地址信息与监听套接字绑定
-    Bind(listenfd,&sockaddr,sizeof(sockaddr));
+    bind(listenfd,&servaddr,sizeof(servaddr));
     
     //开始监听
-    Listen(listenfd,LISTENQ);
+    printf("start listen\n");
+    listen(listenfd,LISTENQ);
     for(;;){
         clilen=sizeof(cliaddr);
-        connfd=Accept(listenfd,&cliaddr,&clilen);
+        printf("wait to accpet\n");
+        connfd=accept(listenfd,&cliaddr,&clilen);
         //为0表示是子进程
+        /*
+            强制关闭客户端
+            wait to accpet
+            receive a connection,sockfd is -1
+        */
+        printf("receive a connection,sockfd is %d\n",connfd);
         if((childpid=fork())==0){
             //子进程中关闭连接套接字，
-            Close(listenfd);
+            close(listenfd);
             str_echo(connfd);
+            exit(0);
         }
-        Close(connfd);
+        close(connfd);
     }
+}
+void str_echo(int sockfd){
+    char recvline[MAXLINE];
+    //从客户端程序输入中读取
+    //写入socket中去，传送到服务端
+    ssize_t n;
+ again:   
+    while((n=read(sockfd,recvline,MAXLINE)>0)){
+            write(sockfd,recvline,strlen(recvline));
+            printf("Recvline Detail:%d%s",strlen(recvline),recvline);
+    }
+    if(n<0)goto again;
+    else printf("Read error");  
 }
