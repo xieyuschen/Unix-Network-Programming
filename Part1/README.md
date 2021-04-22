@@ -1,4 +1,4 @@
-# 关于本part
+# 从套接字读入读出
 首先目前出现的问题是，在客户端写入socket后，服务端接受再写回，客户端就接收不到了。需要到下一轮来接受。  
 - 在客户端，服务端并没有写入
 打下输出标志，很明显关注：`Recvline Detail:3h`，但我在客户端只输入了`h`,加上回车。那么说明我的函数出现了错误。  
@@ -76,3 +76,32 @@ cd build
 cmake .. -DLIB_PATH=~/.Project/unpv13e/lib/
 make
 ```
+
+# Part1的不足
+## Part1所实现的功能
+`Part1`实现了简单的socket连接。从客户端到服务端的一个回射。  
+- 服务端  
+服务端完成了对套接字的创建，对套接字绑定协议簇以及端口。之后开启`listen`和`accept`的生活。其中listen改变了套接字的
+状态，然后accept会阻塞并等待socket连接。连接完成后，会开启新进程去完成与客户端的交互，在主进程上仍然让监听套接字进
+行监听。接受客户套接字输入然后再写回。
+- 客户端  
+客户端创建了自己的套接字。然后绑定协议簇以及端口，开启connect请求去和服务器连接。给服务端发送信息后再接受发送回来的。
+## Part1还不完善的地方
+使用命令查看本次编程端口9877的连接情况：
+```sh
+netstat -a|grep 9877
+```
+```sh
+Proto Recv-Q Send-Q Local Address           Foreign Address         State
+tcp        0      0 0.0.0.0:9877            0.0.0.0:*               LISTEN     
+#此处这个是客户端的端口，然后58640应该是操作系统给分配的端口，每次不一定一样
+tcp        0      0 localhost:9877          localhost:58640         ESTABLISHED
+tcp        0      0 localhost:58640         localhost:9877          ESTABLISHED
+```
+此时关闭客户端：
+```
+tcp        0      0 0.0.0.0:9877            0.0.0.0:*               LISTEN     
+tcp        0      0 localhost:58640         localhost:9877          TIME_WAIT  
+```
+一段时间后,`TIME_WAIT`状态下的内容被操作系统自动清理掉。但是假设一次性终结了大量的连接，我们
+需要对其手动进行释放，否则就会产生大量僵死进程。
