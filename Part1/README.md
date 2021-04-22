@@ -46,3 +46,33 @@ ok，目前问题解决。
 
 - 需要编写一个CMakeLists.txt  
 目前的`run.sh`其实升级版就是一个`CMakeLists.txt`,然后和方便的build和make。当然目前项目也不大，不写问题也不大:)
+
+# 加入CMake支持
+用CMake对项目管理可以更加的优雅。这里使用CMake来完成对项目的管理：
+```sh
+#限制cmake最基本的版本
+cmake_minimum_required(VERSION 3.16)
+#给你的项目起一个名字，当然你还可以带上version
+project(Part1)
+#指定编译器，这里就是指定C的标准为C11，C的标准必须有
+set(CMAKE_C_STANDARD 11)
+set(CMAKE_C_STANDARD_REQUIRED True)
+
+# 生成可执行文件，注意此时还没有加上依赖什么的
+add_executable(client client.c)
+add_executable(server server.c)
+
+#这里加入上面可执行文件所依赖的库，LIB_PATH的值通过cmake时
+#-DLIB_PATH传入
+target_include_directories(client PRIVATE ${LIB_PATH})
+target_include_directories(server PRIVATE ${LIB_PATH})
+```
+使用`CMake`编译项目：
+```sh
+#start at path Unix-Network-Programming/Part1
+sudo mkdir -p build
+cd build
+#这里我的unp.h文件在~/.Project/unpv13e/lib/ 路径下
+cmake .. -DLIB_PATH=~/.Project/unpv13e/lib/
+make
+```
