@@ -76,7 +76,11 @@ cd build
 cmake .. -DLIB_PATH=~/.Project/unpv13e/lib/
 make
 ```
-
+但是发现需要管理员权限，那么这里LIB_PATH就要改成:
+```sh
+sudo cmake .. -DLIB_PATH=/home/user/.Project/unpv13e/lib/
+sudo make
+```
 # Part1的不足
 ## Part1所实现的功能
 `Part1`实现了简单的socket连接。从客户端到服务端的一个回射。  

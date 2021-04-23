@@ -47,12 +47,14 @@ int main(int argc, char **argv)
     //开始监听
     printf("start listen\n");
     listen(listenfd, LISTENQ);
-    signal(listenfd,sig_chld);
+    signal(SIGCHLD,sig_chld);
     for (;;)
     {
         clilen = sizeof(cliaddr);
         printf("wait to accpet\n");
-        connfd = accept(listenfd, &cliaddr, &clilen);
+        if((connfd = accept(listenfd, &cliaddr, &clilen))<0){
+            if(errno==EINTR)continue;
+        };
         //为0表示是子进程
         /*
             强制关闭客户端

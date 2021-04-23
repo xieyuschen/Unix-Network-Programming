@@ -1,7 +1,7 @@
 #include "unp.h"
 #include "util.h"
 int main(int argc,char **argv){
-    int sockfd;//socket descriptor
+    int sockfd[5];//socket descriptors
     struct sockaddr_in servaddr;
     if(argc!=2){
         printf("no ip address\n");
@@ -9,8 +9,8 @@ int main(int argc,char **argv){
 
     }
 
-    //创建socket
-    sockfd=socket(AF_INET,SOCK_STREAM,0);
+    for(int i=0;i<5;i++){
+    sockfd[i]=socket(AF_INET,SOCK_STREAM,0);
     bzero(&servaddr,sizeof(servaddr));
 
     
@@ -22,9 +22,9 @@ int main(int argc,char **argv){
     inet_pton(AF_INET,argv[1],&servaddr.sin_addr);
 
     //sockfd表示该连接绑定socket的描述符，
-    connect(sockfd,&servaddr,sizeof(servaddr));
-    printf("make a connection,sockfd is %d\n",sockfd);
-    str_cli(stdin,sockfd);
+    connect(sockfd[i],&servaddr,sizeof(servaddr));
+    }
+    str_cli(stdin,sockfd[0]);
     exit(0);
 }
 
@@ -41,12 +41,5 @@ void str_cli(FILE* fp,int sockfd){
         //从服务端获取
         readline(sockfd, recvline,MAXLINE);
         fputs(recvline,stdout);
-        // while((readline(sockfd,recvline,10)!=0)){
-        //     fputs(recvline,stdout);
-        // }
-        // if(readline(sockfd,recvline,MAXLINE)==0){
-        //     printf("Failed to readline from server side\n");
-        //     exit(0);
-        // }
     }
 }
