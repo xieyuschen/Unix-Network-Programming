@@ -10,19 +10,19 @@ int main(int argc,char **argv){
     }
 
     for(int i=0;i<5;i++){
-    sockfd[i]=socket(AF_INET,SOCK_STREAM,0);
-    bzero(&servaddr,sizeof(servaddr));
+        sockfd[i]=socket(AF_INET,SOCK_STREAM,0);
+        bzero(&servaddr,sizeof(servaddr));
 
-    
-    servaddr.sin_family=AF_INET;
-    servaddr.sin_port=htons(SERV_PORT);
+        
+        servaddr.sin_family=AF_INET;
+        servaddr.sin_port=htons(SERV_PORT);
 
-    //argv[1] passes the server ip
-    //这里将可读ip转换为二进制，写入servaddr中去
-    inet_pton(AF_INET,argv[1],&servaddr.sin_addr);
+        //argv[1] passes the server ip
+        //这里将可读ip转换为二进制，写入servaddr中去
+        inet_pton(AF_INET,argv[1],&servaddr.sin_addr);
 
-    //sockfd表示该连接绑定socket的描述符，
-    connect(sockfd[i],&servaddr,sizeof(servaddr));
+        //sockfd表示该连接绑定socket的描述符，
+        connect(sockfd[i],&servaddr,sizeof(servaddr));
     }
     str_cli(stdin,sockfd[0]);
     exit(0);
