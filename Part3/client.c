@@ -64,6 +64,10 @@ void str_cli(FILE* fp,int sockfd){
 
 }
 void str_cli2(FILE* fp,int sockfd){
+    struct timeval tv; 
+
+    tv.tv_sec = 2;
+    tv.tv_usec = 500000;
     int maxfdp1,stdineof=0;
     fd_set rset;
     char buf[MAXLINE];
@@ -77,6 +81,10 @@ void str_cli2(FILE* fp,int sockfd){
         }
         FD_SET(sockfd,&rset);
         maxfdp1=max(fileno(fp),sockfd)+1;
+
+        //设置select的超时，如果不设置超时时间最后一个参数传入NULL即可
+        //如果不设置超时时间，select无描述符就绪时将会无限阻塞。
+        //select(maxfdp1,&rset,NULL,NULL,&tv);
         select(maxfdp1,&rset,NULL,NULL,NULL);
         if(FD_ISSET(sockfd,&rset)){//socket可读
             printf("socket is valid to read\n");
