@@ -24,10 +24,10 @@ ssize_t readline(int fd,void* vptr,size_t maxlen){
         if((rc=read(fd,&c,1)==1)){
             *ptr++=c;
             if(c=='\n')break;
-        }else if(rc==0){//读到0字符，结束输入
+        }else if(rc==0){
             *ptr=0;
             return (n-1);
-        }else{//socket不可读
+        }else{
             return -1;
         }
     }
