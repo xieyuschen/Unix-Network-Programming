@@ -20,3 +20,5 @@ void str_cli(FILE* fp,int sockfd){
 我们引入`select`,不阻塞在一个io上面，而是同时对两个输入端进行监听。所以在服务端关闭后，socket
 会告诉服务端情况，此时就可以直接对其做处理。而不是在第一次收到RST，第二次收到SIGPIPE信号强制关
 闭进程。
+## Str_cli
+在本节中，实现了两个功能递增的`str_cli`函数。
