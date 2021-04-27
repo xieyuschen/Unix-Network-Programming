@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(Part2)
+project(Part3)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED True)
 set(LIB_PATH /home/user/.Project/unpv13e/lib/)
