@@ -30,7 +30,6 @@ int main(int argc,char **argv){
     if(argc!=2){
         printf("no ip address\n");
         exit(0);
-
     }
 
     //创建socket

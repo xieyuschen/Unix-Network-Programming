@@ -46,4 +46,10 @@ target_link_libraries(server PUBLIC
 一个线程是`joinable`（默认值）或者`detached`（脱离）。joinable状态的线程ID和退出状态可以留存到
 另一线程对其调用`pthread_join`函数。而`detached`状态就不行，会直接释放掉资源。  
 
-
+## 启动项目
+本次参数传递需要额外传递:
+```sh
+./server 127.0.0.1 9877
+./client 127.0.0.1
+```
+在启动server的时候，域名和端口是需要做好的。
