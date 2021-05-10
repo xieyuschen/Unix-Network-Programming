@@ -1,6 +1,61 @@
 # Unix-Network-Programming
 本项目在`Ubuntu 20.04`系统,gcc版本`9.3.0`.基于`UNIX网络编程卷1：套接字联网API`进行学习。
+## 本仓库涉及到的主要内容:
+- [Part1-easiest-socket-server&client](./Part1)  
+服务端使用多进程的socket编程。  
+主要对以下概念进行了实践：
+    - 使用fork函数实现通过多进程处理多个socket连接
+    - 使用gcc来编译执行代码
+    - 使用CMake对项目进行编译执行
+    - 反思多进程的一些缺点，如在进程死亡后并不会被立刻清理仍占用进程表等  
+- [Part2-foucs-on-process-detail-on-server-side](./Part2)  
+在本章节中，延续了Part1的部分内容，通过信号机制对多进程进行了相关处理。  
+主要对以下概念进行实践：  
+    - 信号的基本知识以及进程生命周期中可能产生的信号
+    - 捕获与处理信号
+    - 在关闭服务端时，客户端两次写入后分别获取`RST`与`SIGPIPE`信号，最终结束进程  
+- [Part3-use-IO-multiplexing-on-client](./Part3)
+本章在客户端使用IO多路复用模型，为了避免IO阻塞在某一个地方。  
+主要对以下概念进行实践：  
+    - IO多路复用的基本概念
+    - IO多路复用中常见的`select()`,`FD_SET`等函数以及数据结构
+    - 了解阻塞IO模型以及其效率低的原因
+- [Part4-use-IO-multiplexing-on-client&server](./Part4)
+本章节支持了服务端的IO多路复用模型，通过IO多路复用来完成服务端对多个套接字的监听。  
+主要对以下概念进行实践：  
+    - 如何通过IO多路复用模型使服务端具有处理多个socket连接的能力  
+    - 如何管理和组织多个socket连接描述符
+    - 对`select()`函数的进一步理解
+- [Part5-make-a-daemon](./Part5)  
+本章节介绍了关于守护进程的相关知识。  
+主要对以下概念进行实践：  
+    - 进程组与会话的概念
+    - 守护进程的特征
+    - 如何一步步的生成一个守护进程
+ 
+- [Part6-advanced-IO](./Part6)  
+讲述了一些高级IO函数。
 
+- [Part7-non-blocking-IO](./Part7)
+本节讲述非阻塞IO的相关知识。  
+主要对以下概念进行实践：  
+    - 对IO的各种形式进行了学习
+    - 学习非阻塞IO的思路（立即返回与回调）
+    - ~~对于非阻塞IO中轮询（不停检查IO是否就绪的行为）消耗CPU资源情况下使用阻塞的解决方案~~
+    - 非阻塞IO的具体实现方式
+    - 对数据缓冲区的细节实现与&了解
+- [Part8(1)-thread-server](./Part8(1))
+本节在服务器端使用了多线程版本进行相关连接的处理。  
+主要对以下概念进行实践：  
+    - 线程相关操作函数的使用
+    - 线程的相关概念
+    - 线程间可共享数据的特性
+- More  
+[sohardforaname/TinyHttpServer](https://github.com/sohardforaname/TinyHttpServer)使用C++实现的轻量级服务器。使用线程池模型&多路复用进行服务效率的提升。
+
+
+
+　　　
 # 先前准备
 - 本书中出现对`unp.h`的依赖，首先需要下载该书给出的依赖库  
 ```sh
