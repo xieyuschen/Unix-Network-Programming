@@ -53,8 +53,18 @@
 - More  
 [sohardforaname/TinyHttpServer](https://github.com/sohardforaname/TinyHttpServer)使用C++实现的轻量级服务器。使用线程池模型&多路复用进行服务效率的提升。
 
+# 碎碎念&QA
+- `Q`:为什么要IO多路复用？  
+`A`:不希望被阻塞在某一个IO上，而是希望在单个线程中可以拥有对多个IO的处理能力  
+`Q`:那如何实现这个功能？
+`A`:通过`select`阻塞，而不是在IO处阻塞。这样可以避免被阻塞等待一处IO可用时错过另外就绪的IO  
 
-
+- `Q`:什么是非阻塞IO？  
+`A`:非阻塞IO不阻塞，立刻返回。无论IO是否成功，将状态码返回给用户   
+`Q`:那么如果成功，数据从哪里返回？  
+`A`:在非阻塞IO使用的过程中，会使用系统调用[aio_read](https://man7.org/linux/man-pages/man3/aio_read.3.html)告诉os进行了aio(Asynchronous IO)。那么立刻返回的信息标识是否成功。然后在成功之后会直接传递到结构体中去.The `asynchronous` means that this call returns as soon as the request has been enqueued  
+- `Q`:[Part8(1)](./Part8(1))中的非阻塞IO是如何实现的？  
+`A`:在其中，采取自己维护一段缓冲区。然后在这段缓冲区中进行读数据。然后仍然使用了阻塞读，也即`read`函数，保证了如果可读那么在返回时数据其实数据已经被读了出来。
 　　　
 # 先前准备
 - 本书中出现对`unp.h`的依赖，首先需要下载该书给出的依赖库  
